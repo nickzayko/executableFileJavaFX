@@ -1,0 +1,30 @@
+фев 04, 2020 7:03:11 PM controllers.Confirmation restart
+INFO: 1. начало остановки службы "1C:Enterprise 8.3 Server Agent" или  "1C:Enterprise 8.3 Server Agent (x86-64)"
+фев 04, 2020 7:03:11 PM controllers.Confirmation stopService
+INFO: ******* 1. Проверка наличия служб *******
+фев 04, 2020 7:03:12 PM controllers.Confirmation stopService
+INFO: 1.1. Служба "1C:Enterprise 8.3 Server Agent" НЕ найдена, производим попытку остановки службы "1C:Enterprise 8.3 Server Agent (x86-64)"
+фев 04, 2020 7:03:12 PM controllers.Confirmation stopService
+INFO: Проверим, служба "1C:Enterprise 8.3 Server Agent (x86-64)" существует: false
+фев 04, 2020 7:03:12 PM controllers.Confirmation stopService
+INFO: ****** 1.2. Служба "1C:Enterprise 8.3 Server Agent (x86-64)" остановлена, в случае если она была предварительно запущена ******
+фев 04, 2020 7:03:17 PM controllers.Confirmation stopService
+INFO: ******* 1. Проверка наличия служб *******
+фев 04, 2020 7:03:17 PM controllers.Confirmation stopService
+INFO: 1.1. Служба "MSSQLSERVER" НЕ найдена, производим попытку остановки службы "MSSQL$SQLEXPRESS"
+фев 04, 2020 7:03:18 PM controllers.Confirmation stopService
+INFO: Проверим, служба "MSSQL$SQLEXPRESS" существует: false
+фев 04, 2020 7:03:18 PM controllers.Confirmation stopService
+INFO: ****** 1.2. Служба "MSSQL$SQLEXPRESS" остановлена, в случае если она была предварительно запущена ******
+фев 04, 2020 7:03:33 PM controllers.Confirmation stopProcess
+INFO: ******* 2. Проверка наличия процесса *******
+фев 04, 2020 7:03:33 PM controllers.Confirmation stopProcess
+INFO: 2.1. Процесс "1cv8" НЕ найден, пытаемся остановить процесс "1cv8c"
+фев 04, 2020 7:03:33 PM controllers.Confirmation stopProcess
+INFO: ****** 2.2. Процесс "1cv8c" остановлен, в случае если он был предварительно запущен ******
+фев 04, 2020 7:03:38 PM controllers.Confirmation startService
+INFO: ****** 3. Запуск остановленных ранее служб ******
+фев 04, 2020 7:03:38 PM controllers.Confirmation startService
+INFO: 3.1 Служба "MSSQL$SQLEXPRESS" запущена.
+фев 04, 2020 7:03:48 PM controllers.Confirmation startService
+INFO: 3.2 Служба "1C:Enterprise 8.3 Server Agent (x86-64)" запущена.

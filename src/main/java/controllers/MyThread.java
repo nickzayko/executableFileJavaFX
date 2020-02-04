@@ -1,4 +1,4 @@
-//package controllers;
+//package main.java.controllers;
 //
 //import javafx.fxml.FXMLLoader;
 //import javafx.scene.Parent;
@@ -23,7 +23,7 @@
 //
 //
 //    private void startProgressIndicator() throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("../views/indicator.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("../main.java.views/indicator.fxml"));
 //        Scene scene = new Scene(root, 500, 150);
 //        Stage stage = new Stage();
 //        stage.setScene(scene);

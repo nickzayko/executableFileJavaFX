@@ -3,24 +3,42 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logging.LoggerConf;
 
 import java.io.*;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main extends Application {
 
-    Logger logger = Logger.getLogger(Main.class.getName());
+//    static Logger logger = Logger.getLogger(Main.class.getName());
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws IOException {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        logger.log(Level.INFO,"Starting project");
+//        try {
+//            LogManager.getLogManager().readConfiguration(
+//                    Main.class.getResourceAsStream("/logging.properties"));
+//        }catch (IOException e) {
+//            System.err.println("Could not setup logger configuration: " + e.toString());
+//        }
+
+//        FileHandler fh = new FileHandler("log.txt", true);
+//        // Send logger output to our FileHandler.
+//        logger.addHandler(fh);
+//        // Request that every detail gets logged.
+//        logger.setLevel(Level.ALL);
+        LoggerConf conf = new LoggerConf(Main.class.getName());
+        Logger logger = conf.getLogger();
+        logger.log(Level.INFO,"------------------- Project start ---------------------");
         primaryStage.setResizable(false);
-        Parent root = FXMLLoader.load(getClass().getResource("views/confirmation.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/confirmation.fxml"));
         primaryStage.setScene(new Scene(root, 500, 150));
         primaryStage.show();
     }
