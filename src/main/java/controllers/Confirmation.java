@@ -22,26 +22,39 @@ import java.util.logging.Logger;
 
 public class Confirmation {
 
-    private final String SERVER_AGENT_1C = "1C:Enterprise 8.3 Server Agent";
-//    private final String SERVER_AGENT_1C = "MySQL80";
+//    public static void main(String[] args) throws IOException {
+//        String SERVER_AGENT_1C = "1C:Enterprise 8.3 Server Agent";
+//
+//        String GET_SERVICE_BEGIN = "powershell.exe Get-Service -Name '";
+//        String GET_SERVICE_END = "'";
+//
+//        Process process = Runtime.getRuntime().exec(GET_SERVICE_BEGIN + SERVER_AGENT_1C + GET_SERVICE_END);
+//        processDetail(process, SERVER_AGENT_1C);
+//
+//    }
+
+        private final String SERVER_AGENT_1C = "1C:Enterprise 8.3 Server Agent";
+    //    private final String SERVER_AGENT_1C = "MySQL80";
     private final String SERVER_AGENT_1C_X86_64 = "1C:Enterprise 8.3 Server Agent (x86-64)";
-//    private final String SERVER_AGENT_1C_X86_64 = "MySQL80";
+    //    private final String SERVER_AGENT_1C_X86_64 = "MySQL80";
+    private final String SERVER_AGENT_1C_SHORT_NAME = "1C:Enterprise*";
+//    private final String SERVER_AGENT_1C_SHORT_NAME = "MySQL80";
     private final String MSSQLSERVER = "MSSQLSERVER";
-//    private final String MSSQLSERVER = "lfsvc";
+//        private final String MSSQLSERVER = "lfsvc";
     private final String MSSQL$SQLEXPRESS = "MSSQL$SQLEXPRESS";
-//    private final String MSSQL$SQLEXPRESS = "lfsvc";
+//        private final String MSSQL$SQLEXPRESS = "lfsvc";
     private final String PROCESS_1cv8 = "1cv8";
-//    private final String PROCESS_1cv8 = "notepad";
+//        private final String PROCESS_1cv8 = "notepad";
     private final String PROCESS_1cv8c = "1cv8c";
 //    private final String PROCESS_1cv8c = "notepad";
 
-    private final String STOP_SERVICE_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Stop-Service -Name \"";
+    private final String STOP_SERVICE_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Stop-Service -Name '";
 
-    private final String STOP_PROCESS_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Stop-Process -Name \"";
+    private final String STOP_PROCESS_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Stop-Process -Name '";
 
-    private final String START_SERVICE_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Start-Service -Name \"";
+    private final String START_SERVICE_BEGIN = "powershell.exe -Command \"Start-Process powershell \\\"-ExecutionPolicy -NoProfile -Command `Start-Service -Name '";
 
-    private final String COMMAND_END = "\"`\\\"\\\" -Verb RunAs\"";
+    private final String COMMAND_END = "'`\\\"\\\" -Verb RunAs\"";
 
     private final String GET_PROCESS = "powershell.exe Get-Process -Name ";
     private final String GET_SERVICE = "powershell.exe Get-Service -Name ";
@@ -64,8 +77,9 @@ public class Confirmation {
 
     public void restart(ActionEvent actionEvent) throws IOException, InterruptedException {
         ((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
-        logger.log(Level.INFO, "1. начало остановки службы \"" + SERVER_AGENT_1C + "\" или  \"" + SERVER_AGENT_1C_X86_64 +"\"");
-        stopService(SERVER_AGENT_1C, SERVER_AGENT_1C_X86_64);
+        logger.log(Level.INFO, "1. начало остановки службы \"" + SERVER_AGENT_1C + "\" или  \"" + SERVER_AGENT_1C_X86_64 + "\"");
+//        stopService(SERVER_AGENT_1C, SERVER_AGENT_1C_X86_64);
+        stopService(SERVER_AGENT_1C_SHORT_NAME);
         Thread.sleep(5000);
         stopService(MSSQLSERVER, MSSQL$SQLEXPRESS);
         Thread.sleep(15000);
@@ -77,6 +91,20 @@ public class Confirmation {
         Runtime.getRuntime().exit(0);
     }
 
+    private void stopService(String serviceName) throws IOException {
+        logger.log(Level.INFO, "******* 1. Остановка службы 1C:Enterprise 8.3 Server Agent  *******");
+        if (isServiceExist(serviceName)) {
+            logger.log(Level.INFO, "1.1. Служба " + "\"" + serviceName + "\"" + " найдена успешно");
+            flag = false;
+            info.add(serviceName);
+            Process stopService = Runtime.getRuntime().exec(STOP_SERVICE_BEGIN + serviceName + COMMAND_END);
+            System.out.println(STOP_SERVICE_BEGIN + serviceName + COMMAND_END);
+            logger.log(Level.INFO, "1.2. Служба " + "\"" + serviceName + "\"" + " остановлена");
+        } else {
+            logger.log(Level.INFO, "1.1. Служба " + "\"" + serviceName + "\"" + " НЕ найдена");
+        }
+    }
+
     private void startService(ArrayList info) throws InterruptedException {
         try {
             logger.log(Level.INFO, "****** 3. Запуск остановленных ранее служб ******");
@@ -84,7 +112,7 @@ public class Confirmation {
             logger.log(Level.INFO, "3.1 Служба " + "\"" + info.get(1) + "\"" + " запущена.");
             Thread.sleep(10000);
             Process start1CServer = Runtime.getRuntime().exec(START_SERVICE_BEGIN + info.get(0) + COMMAND_END);
-            logger.log(Level.INFO, "3.2 Служба " + "\"" + info.get(0) + "\"" + " запущена." );
+            logger.log(Level.INFO, "3.2 Служба " + "\"" + info.get(0) + "\"" + " запущена.");
         } catch (IOException e) {
             e.printStackTrace();
             badAlert();
@@ -107,25 +135,31 @@ public class Confirmation {
             flag = false;
             Process stopService = Runtime.getRuntime().exec(STOP_PROCESS_BEGIN + processFirstName + COMMAND_END);
             logger.log(Level.INFO, "2.2. Процесс " + "\"" + processFirstName + "\"" + " остановлен");
-        }  else {
+        } else {
             logger.log(Level.INFO, "2.1. Процесс " + "\"" + processFirstName + "\"" + " НЕ найден, пытаемся остановить процесс " +
-            "\"" + processSecondName + "\"");
+                    "\"" + processSecondName + "\"");
             Process stopService = Runtime.getRuntime().exec(STOP_PROCESS_BEGIN + processSecondName + COMMAND_END);
             logger.log(Level.INFO, "****** 2.2. Процесс " + "\"" + processSecondName + "\"" + " остановлен, в случае если он был предварительно запущен ******");
         }
     }
 
     private boolean isProcessExist(String processName) throws IOException {
+        flag = false;
+        System.out.println("process flag begin = " + flag);
         Process process = Runtime.getRuntime().exec(GET_PROCESS + processName);
         process.getOutputStream().close();
         String line;
         BufferedReader stdout = new BufferedReader(new InputStreamReader(
                 process.getInputStream()));
+        System.out.println("---------------   Process details     -------------------------");
         while ((line = stdout.readLine()) != null) {
+            System.out.println(line);
             if (line.contains(processName)) {
                 flag = true;
             }
         }
+        System.out.println("process flag end = " + flag);
+        System.out.println("----------------------------------------------------------------");
         stdout.close();
         return flag;
     }
@@ -137,13 +171,16 @@ public class Confirmation {
             flag = false;
             info.add(serviceFirstName);
             Process stopService = Runtime.getRuntime().exec(STOP_SERVICE_BEGIN + serviceFirstName + COMMAND_END);
+            System.out.println(STOP_SERVICE_BEGIN + serviceFirstName + COMMAND_END);
             logger.log(Level.INFO, "1.2. Служба " + "\"" + serviceFirstName + "\"" + " остановлена");
-        }  else {
+        } else {
             logger.log(Level.INFO, "1.1. Служба " + "\"" + serviceFirstName + "\"" + " НЕ найдена, производим попытку остановки службы " +
-            "\"" + serviceSecondName + "\"");
+                    "\"" + serviceSecondName + "\"");
             logger.log(Level.INFO, "Проверим, служба " + "\"" + serviceSecondName + "\"" + " существует: " + isServiceExist(serviceSecondName));
+            flag = false;
             info.add(serviceSecondName);
             Process stopService = Runtime.getRuntime().exec(STOP_SERVICE_BEGIN + serviceSecondName + COMMAND_END);
+            System.out.println(STOP_SERVICE_BEGIN + serviceSecondName + COMMAND_END);
             logger.log(Level.INFO, "****** 1.2. Служба " + "\"" + serviceSecondName + "\"" + " остановлена, в случае если она была предварительно запущена ******");
         }
     }
@@ -155,26 +192,26 @@ public class Confirmation {
         BufferedReader stdout = new BufferedReader(new InputStreamReader(
                 process.getInputStream()));
         while ((line = stdout.readLine()) != null) {
-            if (line.contains(name)) {
+            if (line.contains(name.substring(0, name.length() - 2))) {
                 flag = true;
             }
         }
-        System.out.println("flag " + flag);
+        System.out.println("flag = " + flag);
         stdout.close();
         return flag;
     }
 
-    private static void processDetail(Process process, int i) throws IOException {
+    private static void processDetail(Process process, String name) throws IOException {
         boolean flag = false;
         process.getOutputStream().close();
         String line;
 
-        System.out.println("-------------- Begin Standard Output (process " + i + " ): ------------------------------");
+        System.out.println("-------------- Begin Standard Output (process " + name + " ): ------------------------------");
         BufferedReader stdout = new BufferedReader(new InputStreamReader(
                 process.getInputStream()));
         while ((line = stdout.readLine()) != null) {
             System.out.println(line);
-            if (line.contains("notepad")) {
+            if (line.contains("1C:Enterprise 8...")) {
                 flag = true;
             }
         }
